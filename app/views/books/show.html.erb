@@ -7,74 +7,24 @@
       <%= render 'form', book: @book_new %>
     </div>
     <div class="col-md-8 offset-md-1">
-      <h2>Book detail</h2>
-      <table class="table table-hover table-inverse">
-        <thead>
-          <tr>
-            <th></th>
-            <th>Title</th>
-            <th>Opinion</th>
-            <th colspan="3"></th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>
-              <%= link_to user_path(@book.user) do %>
-                <%= image_tag @book.user.get_profile_image(80,80) %><br/>
-                <%= @book.user.name %>
-              <% end %>
-            </td>
-            <td><%= link_to @book.title, book_path(@book) %></td>
-            <td><%= @book.body %></td>
-            <% if current_user == @book.user %>
-              <td><%= link_to "Edit", edit_book_path(@book), class: 'btn btn-success' %></td>
-              <td><%= link_to "Destroy", book_path(@book), method: :delete, class: 'btn btn-danger', data: { confirm: "削除してもよろしいですか？" } %></td>
-            <% end %>
-            <td>
-            <% if @book.favorited_by?(current_user) %>
-            <p>
-              <%= link_to book_favorites_path(@book), method: :delete do %>
-                ♥<%= @book.favorites.count %> いいね
-              <% end %>
-            </p>
-            <% else %>
-            <p>
-              <%= link_to book_favorites_path(@book), method: :post do %>
-                ♡<%= @book.favorites.count %> いいね
-              <% end %>
-            </p>
-            <% end %>
-            </td>
-            <td>コメント数:<%= @book.book_comments.count %></td>
-          </tr>
-        </tbody>
-      </table>
+      <div class="comments-counts">
+        <%= render 'detail', book: @book %>
+      </div>
+
       <div>
         <table>
           <tbody>
-            <% @book.book_comments.each do |book_comment| %>
-            <tr>
-              <td>
-                <%= link_to user_path(@book.user) do %>
-                  <%= image_tag book_comment.user.get_profile_image(100,100) %><br>
-                  <%= book_comment.user.name %>
-                <% end %>
-              </td>
-              <td><%= book_comment.comment %></td>
-            </tr>
-            <% end %>
+            <div class="comments-index">
+              <%= render 'book_comments/comments', book: @book %>
+            </div>
           </tbody>
         </table>
 
 
 
       </div>
-      <div>
-        <%= form_with model: [@book, @comment] do |f| %>
-          <%= f.text_area :comment %>
-          <%= f.submit "送信" %>
-        <% end %>
+      <div class="comments-form">
+        <%= render 'book_comments/form', book: @book, comment: @comment %>
       </div>
     </div>
   </div>
